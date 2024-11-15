@@ -1,6 +1,3 @@
-import asyncio
-import signal
-
 import can
 import logging
 
@@ -18,10 +15,6 @@ def make_can_msg_(id_, bytes_: tuple):
     )
 
 
-async def print_msg(msg) -> None:
-    print(msg)
-
-
 class CanDriver:
     def __init__(self, interface, channel, loop):
         self.loop = loop
@@ -29,7 +22,7 @@ class CanDriver:
         self.reader = can.AsyncBufferedReader()
         self.notifier = can.Notifier(self.__can, [self.reader], loop=loop)
         self.logger = can.Logger("logfile.asc")
-        self.listeners = [print_msg]
+        self.listeners = []
 
     async def service_buffer(self):
         while True:

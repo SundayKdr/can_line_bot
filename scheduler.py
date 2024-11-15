@@ -13,6 +13,7 @@ class Scheduler:
         self.__enable = True
         self.__action_coro = action_coro
         self.loop = loop
+        self.__task: asyncio.Task = None
 
     async def task(self):
         while self.enable:
@@ -20,7 +21,7 @@ class Scheduler:
             await self.__action_coro()
 
     def run(self):
-        self.loop.create_task(self.task())
+        self.__task = self.loop.create_task(self.task())
         log.info(f"scheduled task started delay:{self.delay}")
 
     @property
@@ -31,6 +32,9 @@ class Scheduler:
     def delay(self, seconds: int):
         self.__delay = seconds
         log.info(f"new delay set :{self.delay}")
+        if self.__task is not None:
+            self.__task.cancel()
+            self.__task = self.loop.create_task(self.task())
 
     @property
     def enable(self):

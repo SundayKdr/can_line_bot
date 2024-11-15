@@ -7,7 +7,6 @@ controller = controller.Controller(interface="socketcan", channel="can0",
 
 def main() -> None:
     controller.start_app()
-    pass
 
 
 if __name__ == "__main__":
